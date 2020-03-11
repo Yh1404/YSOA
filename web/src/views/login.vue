@@ -1,37 +1,74 @@
 <template>
   <el-container>
-    <el-header>
-      登录
-    </el-header>
-    <el-form size="medium" :model="loginForm">
-      <el-form-item>
-        <el-input placeholder="用户名" prefix-icon="el-icon-user" v-model="loginForm.username"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-input show-password placeholder="密码" prefix-icon="el-icon-lock" v-model="loginForm.password"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button></el-button>
-      </el-form-item>
-    </el-form>
+    <header>
+      公文逐级审批系统
+    </header>
+    <el-switch v-model="flag" active-text="登录" inactive-text="注册" active-value="login" inactive-value="regis" active-color="#00a8ff" inactive-color="#00a8ff">
+    </el-switch>
+    <div class="form_box">
+      <transition name="fade" mode="out-in">
+        <keep-alive>
+          <component :is="flag"></component>
+        </keep-alive>
+      </transition>
+    </div>
   </el-container>
 </template>
 <script>
+import LoginForm from "../components/login_form";
+import RegisForm from "../components/regis_form";
 export default {
   data() {
     return {
-      loginForm: {
-        username: '',
-        password: ''
-      }
+      flag: "login"
     };
+  },
+  components: {
+    login: LoginForm,
+    regis: RegisForm
   }
 };
 </script>
 <style lang="css" scoped>
-.el-form {
-  width: 200px;
-  height: 300px;
-  margin: 200px auto;
+.el-container {
+  height: 100%;
+  background-color: #fff;
+}
+.el-switch {
+  position: absolute;
+  margin: 20px 0 0 10px;
+}
+.form_box {
+  height: 100%;
+  width: 100%;
+  background: url("../assets/timg.jpg") no-repeat;
+}
+header {
+  position: absolute;
+  font-size: 50px;
+  font-weight: 500;
+  left: 50%;
+  transform: translateX(-50%);
+  letter-spacing: 10px;
+  line-height: 90px;
+  white-space: nowrap;
+}
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-to {
+  opacity: 1;
+}
+.fade-leave {
+  opacity: 1;
+}
+.fade-leave-to {
+  opacity: 0;
+}
+.fade-enter-active {
+  transition: all 0.4s ease;
+}
+.fade-leave-active {
+  transition: all 0.4s ease;
 }
 </style>
