@@ -1,25 +1,48 @@
 <template>
   <el-form size="medium" :model="regisForm" :rules="rules">
-    <div class="title">
-      注册
-    </div>
+
+    <el-form-item prop="name">
+      <el-col :span="10">
+        <el-input placeholder="姓名" prefix-icon="el-icon-user" v-model="regisForm.name"></el-input>
+      </el-col>
+      <el-col :span="5" :offset="2">
+        <el-select v-model="regisForm.gender" placeholder="性别">
+          <el-option v-for="item in gender" :key="item" :label="item" :value="item"></el-option>
+        </el-select>
+      </el-col>
+    </el-form-item>
     <el-form-item prop="username">
       <el-input placeholder="用户名" prefix-icon="el-icon-user" v-model="regisForm.username"></el-input>
     </el-form-item>
-    <el-form-item prop="name">
-      <el-input placeholder="姓名" prefix-icon="el-icon-user" v-model="regisForm.name"></el-input>
-    </el-form-item>
+
     <el-form-item prop="password">
       <el-input show-password placeholder="密码" prefix-icon="el-icon-lock" v-model="regisForm.password"></el-input>
     </el-form-item>
     <el-form-item prop="requirepass">
       <el-input show-password placeholder="再次输入密码" prefix-icon="el-icon-plus" v-model="regisForm.requirepass"></el-input>
     </el-form-item>
-    <el-form-item prop="tel">
-      <el-input placeholder="电话" prefix-icon="el-icon-phone-outline" v-model.number="regisForm.tel"></el-input>
+    <el-form-item>
+      <el-col :span="12">
+        <el-select placeholder="所属部门" v-model="regisForm.department">
+          <el-option v-for="item in department" :key="item._id" :label="item.name" :value="item._id"></el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="2">----</el-col>
+      <el-col :span="10">
+        <el-select v-model="regisForm.identity" placeholder="请选择身份">
+          <el-option v-for="item in identity" :key="item._id" :label="item.name" :value="item._id">
+          </el-option>
+        </el-select>
+      </el-col>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary">注册</el-button>
+      <el-date-picker type="date" value-format="yyyy/M/d" placeholder="选择出生日期" v-model="regisForm.birth" style="width: 100%;"></el-date-picker>
+    </el-form-item>
+    <el-form-item prop="telephone">
+      <el-input placeholder="电话" prefix-icon="el-icon-phone-outline" v-model.number="regisForm.telephone"></el-input>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="regis()">注册</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -36,12 +59,19 @@ export default {
       }
     };
     return {
+      identity: [], //身份选择器取值
+      department: [], //部门级联选择器取值
+      gender: ["男", "女"],
       regisForm: {
         username: "",
         password: "",
         requirepass: "",
-        tel: "",
-        name: ""
+        telephone: "",
+        name: "",
+        birth: "",
+        identity: "",
+        department: "",
+        gender: ""
       },
       rules: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
@@ -54,36 +84,47 @@ export default {
           { min: 6, max: 16, message: "长度在 6 到 16 个字符", trigger: "blur" }
         ],
         requirepass: [{ validator: validatePass, trigger: "blur" }],
-        tel: [
+        telephone: [
           { required: true, message: "请输入手机号", trigger: "blur" },
-          { min: 6, max: 14, message: "请核实手机号是否输入正确", trigger: "blur" },
           { type: "number", message: "必须为数字" }
         ]
       }
     };
   },
   methods: {
-    regis() {}
+    async regis() {
+      const res = await this.$axios.post("/web/register", this.regisForm);
+      if (res.data === "ok") {
+        this.$message({
+          message: "注册成功，请重新登录"
+        });
+        this.$router.go(0);
+      } else {
+        this.$message("请正确填写表单");
+      }
+    },
+    async getIdentity() {
+      const res = await this.$axios.get("/web/chooseinfo");
+      this.identity = res.data[0];
+      this.department = res.data[1];
+    }
+  },
+  created() {
+    this.getIdentity();
   }
 };
 </script>
 <style lang="css" scoped>
-.title {
-  font-size: 24px;
-  font-weight: 400;
-  text-align: center;
-  line-height: 60px;
-}
 .el-form {
   position: relative;
-  width: 400px;
+  width: 600px;
   height: 500px;
   margin: 0 auto;
   top: 50%;
   margin-top: -250px;
   background-color: #fff;
   border-radius: 10px;
-  border: 1px #ccc solid;
+  /* border: 1px #ccc solid; */
   padding-top: 20px;
 }
 .el-form-item {

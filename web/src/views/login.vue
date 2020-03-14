@@ -6,7 +6,7 @@
     <el-switch v-model="flag" active-text="登录" inactive-text="注册" active-value="login" inactive-value="regis" active-color="#00a8ff" inactive-color="#00a8ff">
     </el-switch>
     <div class="form_box">
-      <transition name="fade" mode="out-in">
+      <transition name="el-zoom-in-center" mode="out-in">
         <keep-alive>
           <component :is="flag"></component>
         </keep-alive>
@@ -41,7 +41,7 @@ export default {
 .form_box {
   height: 100%;
   width: 100%;
-  background: url("../assets/timg.jpg") no-repeat;
+  background-color: #fff;
 }
 header {
   position: absolute;
@@ -52,23 +52,5 @@ header {
   letter-spacing: 10px;
   line-height: 90px;
   white-space: nowrap;
-}
-.fade-enter {
-  opacity: 0;
-}
-.fade-enter-to {
-  opacity: 1;
-}
-.fade-leave {
-  opacity: 1;
-}
-.fade-leave-to {
-  opacity: 0;
-}
-.fade-enter-active {
-  transition: all 0.4s ease;
-}
-.fade-leave-active {
-  transition: all 0.4s ease;
 }
 </style>
