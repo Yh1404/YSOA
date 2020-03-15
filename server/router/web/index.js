@@ -21,7 +21,7 @@ module.exports = app => {
       await user.save();
       res.send("ok");
     } catch {
-      console.log("注册表单填写有误");
+      res.status(400).send({ error: "表单填写有误！" });
     }
   });
 

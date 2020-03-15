@@ -93,24 +93,24 @@ export default {
   },
   methods: {
     async regis() {
-      const res = await this.$axios.post("/web/register", this.regisForm);
-      if (res.data === "ok") {
+      try {
+        await this.$axios.post("/web/register", this.regisForm);
         this.$message({
           message: "注册成功，请重新登录"
         });
         this.$router.go(0);
-      } else {
+      } catch {
         this.$message("请正确填写表单");
       }
     },
-    async getIdentity() {
+    async getIdentityAndDepartment() {
       const res = await this.$axios.get("/web/chooseinfo");
       this.identity = res.data[0];
       this.department = res.data[1];
     }
   },
   created() {
-    this.getIdentity();
+    this.getIdentityAndDepartment();
   }
 };
 </script>
