@@ -34,6 +34,10 @@ const schema = new mongoose.Schema({
   role: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "Role"
+  },
+  isLogin: {
+    type: Boolean,
+    default: false
   }
 });
 

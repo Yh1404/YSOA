@@ -2,21 +2,27 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/login.vue";
+
+import store from "../store/index";
+import { Message } from "element-ui";
+
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
+    redirect: "/main"
+  },
+  {
+    path: "/main",
     name: "Home",
-    component: Home
+    component: Home,
+    meta: { requireAuth: true }
   },
   {
     path: "/about",
     name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ "../views/About.vue")
+    component: () => import("../views/About.vue")
   },
   {
     path: "/login",
@@ -31,4 +37,16 @@ const router = new VueRouter({
   routes
 });
 
+router.beforeEach((to, from, next) => {
+  if (!store.getters.token && to.meta.requireAuth) {
+    Message("请先登录");
+    next("/login");
+  } else {
+    next();
+  }
+  if (to.path === "/login" && sessionStorage.getItem("token")) {
+    Message("请先退出登录");
+    next("/main");
+  }
+});
 export default router;

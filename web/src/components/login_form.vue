@@ -1,5 +1,5 @@
 <template>
-  <el-form size="medium" :model="loginForm" :rules="rules">
+  <el-form size="medium" :model="loginForm" :rules="rules" ref="loginForm">
     <el-form-item prop="username">
       <el-input placeholder="用户名" prefix-icon="el-icon-user" v-model="loginForm.username"></el-input>
     </el-form-item>
@@ -7,7 +7,7 @@
       <el-input show-password placeholder="密码" prefix-icon="el-icon-lock" v-model="loginForm.password"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-radio-group v-model="identity">
+      <el-radio-group v-model="role">
         <el-radio label="admin">管理员</el-radio>
         <el-radio label="user">用户</el-radio>
       </el-radio-group>
@@ -21,11 +21,8 @@
 export default {
   data() {
     return {
-      identity: "user",
-      loginForm: {
-        username: "",
-        password: ""
-      },
+      role: "user",
+      loginForm: {},
       rules: {
         username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
@@ -40,12 +37,29 @@ export default {
   },
   methods: {
     async login() {
-      if (this.loginForm.username && this.loginForm.password) {
-        let res = await this.$axios.post("/login", this.loginForm);
-        if (res.data.status == 200) {
-          this.$router.push("/main");
+      this.$refs["loginForm"].validate(async valid => {
+        if (valid) {
+          try {
+            const res = await this.$axios.post("/web/login", this.loginForm);
+
+            if (res.data.user) {
+              this.$store.dispatch("SetTokenAsync", res.data.token);
+              this.$store.dispatch("SetUserInfoAsync", res.data.user);
+              this.$message({
+                type: "success",
+                message: "登录成功！"
+              });
+              this.$router.push("/main");
+            } else if (res.data.message === "该用户已登录") {
+              this.$message.error("该用户已登录");
+            } else if (res.data.message === "用户名不存在或密码错误") {
+              this.$message.error("用户名不存在或密码错误");
+            }
+          } catch {
+            this.$message.error("请重试！");
+          }
         }
-      }
+      });
     }
   }
 };
