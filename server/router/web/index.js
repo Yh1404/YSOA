@@ -4,7 +4,6 @@ module.exports = app => {
 
   const User = require("../../models/User");
   const Dep = require("../../models/Department");
-  const Role = require("../../models/Role");
   const Identity = require("../../models/Identity");
 
   const SECRET = "iodcowei345c$#%@$!j8esawfj23(&U&n";
@@ -57,7 +56,8 @@ module.exports = app => {
 
   router.put("/api/web/logout/:id", async (req, res) => {
     const user = await User.findByIdAndUpdate(req.params.id, { isLogin: false });
-    res.send(user);
+    if (user) res.send("ok");
   });
+
   app.use("/", router);
 };
