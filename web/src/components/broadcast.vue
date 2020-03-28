@@ -21,6 +21,17 @@ export default {
         }
       ]
     };
+  },
+  created() {
+    this.fetch();
+  },
+  methods: {
+    async fetch() {
+      //method to fetch broadcast news
+      const res = await this.$axios.get("/web/broadcast");
+      console.log(res);
+      this.tableData = res.data;
+    }
   }
 };
 </script>

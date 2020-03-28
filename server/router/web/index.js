@@ -5,6 +5,7 @@ module.exports = app => {
   const User = require("../../models/User");
   const Dep = require("../../models/Department");
   const Identity = require("../../models/Identity");
+  const Broadcast = require("../../models/Broadcast");
 
   const SECRET = "iodcowei345c$#%@$!j8esawfj23(&U&n";
 
@@ -55,9 +56,16 @@ module.exports = app => {
   });
 
   router.put("/api/web/logout/:id", async (req, res) => {
+    // exit
     const user = await User.findByIdAndUpdate(req.params.id, { isLogin: false });
     if (user) res.send("ok");
   });
 
+  router.get("/api/web/broadcast", async (req, res) => {
+    await Broadcast.insertMany({ title: "薪资调整说明", body: "大打法是否是托管人和呵护阿尔嘎嘎", date: "2020/3/28" });
+    const news = await Broadcast.find();
+    console.log(news);
+    res.send(news);
+  });
   app.use("/", router);
 };
