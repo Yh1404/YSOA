@@ -8,6 +8,11 @@ const schema = new mongoose.Schema({
     //公文内容
     type: String
   },
+  currentNodeID: {
+    //currrent node id
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "User"
+  },
   originator: {
     //公文发起人
     type: mongoose.SchemaTypes.ObjectId,

@@ -6,6 +6,7 @@ module.exports = app => {
   const Dep = require("../../models/Department");
   const Identity = require("../../models/Identity");
   const Broadcast = require("../../models/Broadcast");
+  const Document = require("../../models/Document");
 
   const SECRET = "iodcowei345c$#%@$!j8esawfj23(&U&n";
 
@@ -30,9 +31,7 @@ module.exports = app => {
 
   router.post("/api/web/login", async (req, res) => {
     //user login api
-    const user = await User.findOne({ username: req.body.username })
-      .populate("identity")
-      .populate("department");
+    const user = await User.findOne({ username: req.body.username }).populate("identity").populate("department");
     if (user && !user.isLogin) {
       const isValid = require("bcryptjs").compareSync(req.body.password, user.password);
       if (isValid) {
@@ -62,10 +61,9 @@ module.exports = app => {
   });
 
   router.get("/api/web/broadcast", async (req, res) => {
-    await Broadcast.insertMany({ title: "薪资调整说明", body: "大打法是否是托管人和呵护阿尔嘎嘎", date: "2020/3/28" });
     const news = await Broadcast.find();
-    console.log(news);
     res.send(news);
   });
+
   app.use("/", router);
 };
