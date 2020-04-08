@@ -4,7 +4,7 @@
       <el-header>
         <div class="user">
           <span class="el-icon-user-solid"></span>
-          <b>&nbsp;&nbsp;&nbsp;{{ `${user.username}` }}</b>
+          <b>&nbsp;&nbsp;&nbsp;{{ `${user.name}` }}</b>
           <b>{{ `(${user.department},${user.identity})` }}</b>
         </div>
         <span class="el-icon-refresh-right refresh" title="刷新页面" @click="refresh()"></span>
@@ -43,22 +43,23 @@
         </el-col>
         <el-main>
           <keep-alive>
-            <component :is="flag"></component>
+            <component :is="flag" :userInfo="user"></component>
           </keep-alive>
         </el-main>
       </el-container>
     </el-container>
-    <el-footer>Footer</el-footer>
+    <el-footer></el-footer>
   </el-container>
 </template>
 <script>
 import broadcast from "../components/broadcast";
+import draft from "../components/draft";
 export default {
   data() {
     return {
       flag: "",
       user: {
-        username: window.sessionStorage.getItem("name"),
+        name: window.sessionStorage.getItem("name"),
         department: window.sessionStorage.getItem("department"),
         identity: window.sessionStorage.getItem("identity"),
         id: window.sessionStorage.getItem("id")
@@ -84,11 +85,14 @@ export default {
     select(index) {
       if (index == "1-2") {
         this.flag = "broadcast";
+      } else if (index == "1-1-1") {
+        this.flag = "draft";
       }
     }
   },
   components: {
-    broadcast: broadcast
+    broadcast: broadcast,
+    draft: draft
   }
 };
 </script>
@@ -142,6 +146,5 @@ b {
 .el-main {
   background-color: #e9eef3;
   color: #333;
-  text-align: center;
 }
 </style>

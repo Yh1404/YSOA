@@ -89,4 +89,9 @@ export default {
   left: 85%;
   top: 85%;
 }
+.pagination {
+  position: absolute;
+  left: 45%;
+  bottom: 80px;
+}
 </style>

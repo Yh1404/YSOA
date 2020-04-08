@@ -7,6 +7,7 @@ module.exports = app => {
   const Identity = require("../../models/Identity");
   const Broadcast = require("../../models/Broadcast");
   const Document = require("../../models/Document");
+  const Flow = require("../../models/Flow");
 
   const SECRET = "iodcowei345c$#%@$!j8esawfj23(&U&n";
 
@@ -63,6 +64,11 @@ module.exports = app => {
   router.get("/api/web/broadcast", async (req, res) => {
     const news = await Broadcast.find();
     res.send(news);
+  });
+
+  router.get("/api/web/flow", async (req, res) => {
+    const flows = await Flow.find();
+    res.send(flows);
   });
 
   app.use("/", router);
