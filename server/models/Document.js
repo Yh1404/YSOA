@@ -18,11 +18,19 @@ const schema = new mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: "User"
   },
+  cc: {
+    //抄送
+    type: Array
+  },
+  flow: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "Flow"
+  },
   date: {
     type: String
   },
   status: {
-    //公文状态，待审批、已审批、审批中
+    //公文状态，待审批、同意、驳回、审批中、
     type: String
   }
 });

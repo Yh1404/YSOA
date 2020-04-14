@@ -4,13 +4,19 @@ import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import router from "./router";
 import axios from "axios";
-import store from './store'
+import store from "./store";
+import moment from "moment";
+
+const ws = new WebSocket("ws://localhost:2333");
+
+moment.locale("zh-cn");
 
 Vue.use(ElementUI);
 
+Vue.prototype.ws = ws;
 Vue.config.productionTip = false;
 Vue.prototype.$axios = axios;
-
+Vue.prototype.moment = moment;
 axios.defaults.baseURL = "http://localhost:3000/api";
 
 new Vue({

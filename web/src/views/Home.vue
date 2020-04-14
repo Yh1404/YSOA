@@ -7,6 +7,10 @@
           <b>&nbsp;&nbsp;&nbsp;{{ `${user.name}` }}</b>
           <b>{{ `(${user.department},${user.identity})` }}</b>
         </div>
+        <div class="date">
+          <h1>北京时间：</h1>
+          <h1>{{ date }}</h1>
+        </div>
         <span class="el-icon-refresh-right refresh" title="刷新页面" @click="refresh()"></span>
         <span class="el-icon-switch-button switch" title="退出登录" @click="logout()"></span>
       </el-header>
@@ -63,13 +67,18 @@ export default {
         department: window.sessionStorage.getItem("department"),
         identity: window.sessionStorage.getItem("identity"),
         id: window.sessionStorage.getItem("id")
-      }
+      },
+      date: ""
     };
   },
   created() {
     window.onunload = this.logout;
+    setInterval(this.getDate, 1000);
   },
   methods: {
+    getDate() {
+      this.date = this.moment().format("YYYY-MM-DD h:mm:ss a");
+    },
     async logout() {
       await this.$axios.put(`/web/logout/${this.user.id}`);
       await this.$store.dispatch("ClearLoginInfoAllAsync");
@@ -108,7 +117,7 @@ export default {
 }
 .user {
   display: inline-block;
-  width: 300px;
+  width: 400px;
   height: 100%;
   font-size: 28px;
   color: #0984e3;
@@ -142,9 +151,17 @@ b {
   text-align: center;
   line-height: 200px;
 }
-
+.date {
+  display: flex;
+  position: absolute;
+  top: 0;
+  justify-content: center;
+  left: 65%;
+}
 .el-main {
+  position: relative;
   background-color: #e9eef3;
   color: #333;
+  overflow-x: hidden;
 }
 </style>

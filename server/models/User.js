@@ -35,6 +35,9 @@ const schema = new mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: "Role"
   },
+  news: {
+    type: Object
+  },
   isLogin: {
     type: Boolean,
     default: false

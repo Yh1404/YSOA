@@ -5,8 +5,8 @@
       <el-table-column label="标题" prop="title"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index,scope.row)">查看</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index,scope.row)">删除</el-button>
+          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -21,8 +21,7 @@
       </span>
     </el-dialog>
     <div class="pagination">
-      <el-pagination :total="total" :page-size="5" @current-change="handleCurrentPage">
-      </el-pagination>
+      <el-pagination :total="total" :page-size="5" @current-change="handleCurrentPage"> </el-pagination>
     </div>
   </div>
 </template>
@@ -74,15 +73,8 @@ export default {
 };
 </script>
 <style lang="css">
-.my-body {
-  text-align: left;
-}
 .el-divider--horizontal {
   margin: 10px 0;
-}
-.date {
-  position: relative;
-  left: 40%;
 }
 .dialog-footer {
   position: absolute;

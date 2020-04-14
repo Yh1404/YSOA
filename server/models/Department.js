@@ -1,15 +1,20 @@
 const mongoose = require("mongoose");
 
-const schema = new mongoose.Schema({
-  name: {
-    type: String,
-    unique: true
+const schema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      unique: true
+    },
+    parent: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "Department"
+    }
   },
-  parent: {
-    type: mongoose.SchemaTypes.ObjectId,
-    ref: "Department"
+  {
+    toJSON: { virtuals: true }
   }
-});
+);
 schema.virtual("users", {
   ref: "User",
   localField: "_id",

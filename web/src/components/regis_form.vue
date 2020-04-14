@@ -18,12 +18,7 @@
       <el-input show-password placeholder="密码" prefix-icon="el-icon-lock" v-model="regisForm.password"></el-input>
     </el-form-item>
     <el-form-item prop="requirepass">
-      <el-input
-        show-password
-        placeholder="再次输入密码"
-        prefix-icon="el-icon-plus"
-        v-model="regisForm.requirepass"
-      ></el-input>
+      <el-input show-password placeholder="再次输入密码" prefix-icon="el-icon-plus" v-model="regisForm.requirepass"></el-input>
     </el-form-item>
     <el-form-item prop="identity">
       <el-col :span="12">
@@ -39,13 +34,7 @@
       </el-col>
     </el-form-item>
     <el-form-item prop="birth">
-      <el-date-picker
-        type="date"
-        value-format="yyyy/M/d"
-        placeholder="选择出生日期"
-        v-model="regisForm.birth"
-        style="width: 100%;"
-      ></el-date-picker>
+      <el-date-picker type="date" value-format="yyyy/M/d" placeholder="选择出生日期" v-model="regisForm.birth" style="width: 100%;"></el-date-picker>
     </el-form-item>
     <el-form-item prop="telephone">
       <el-input placeholder="电话" prefix-icon="el-icon-phone-outline" v-model.number="regisForm.telephone"></el-input>
@@ -107,14 +96,20 @@ export default {
         }
       });
     },
-    async getIdentityAndDepartment() {
-      const res = await this.$axios.get("/web/chooseinfo");
-      this.identity = res.data[0];
-      this.department = res.data[1];
+    async getDepartment() {
+      const res = await this.$axios.get("/web/department");
+      // this.identity = res.data[0];
+      this.department = res.data;
+    },
+    async getIdentity() {
+      const res = await this.$axios.get("/web/identity");
+      // this.identity = res.data[0];
+      this.identity = res.data;
     }
   },
   created() {
-    this.getIdentityAndDepartment();
+    this.getDepartment();
+    this.getIdentity();
   }
 };
 </script>

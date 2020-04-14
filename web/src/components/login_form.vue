@@ -45,6 +45,9 @@ export default {
             if (res.data.user) {
               this.$store.dispatch("SetTokenAsync", res.data.token);
               this.$store.dispatch("SetUserInfoAsync", res.data.user);
+              this.ws.onopen = function() {
+                this.ws.send(res.data.user._id);
+              };
               this.$message({
                 type: "success",
                 message: "登录成功！"
