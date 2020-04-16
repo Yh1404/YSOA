@@ -26,7 +26,7 @@
   </div>
 </template>
 <script>
-import docInfo from "../components/document_info";
+import docInfo from "../components/DocumentInfo";
 function clone(dep) {
   let option = [];
   for (let i = 0; i < dep.length; i++) {

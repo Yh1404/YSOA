@@ -121,5 +121,17 @@ module.exports = app => {
 
     res.send("ok");
   });
-  app.use("/", router);
+  app.use(
+    "/",
+    function (req, res, next) {
+      const token = req.headers.accesstoken;
+      require("jsonwebtoken").verify(token, SECRET, function (err, data) {
+        if (data === req.cookies.user) {
+          next();
+        }
+      });
+      next();
+    },
+    router
+  );
 };

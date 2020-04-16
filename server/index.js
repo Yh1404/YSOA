@@ -1,9 +1,10 @@
 const express = require("express");
-
+const cookieParser = require("cookie-parser");
 const app = express();
 
 app.use(require("cors")());
 app.use(express.json());
+app.use(cookieParser());
 
 require("./plugins/db")(app);
 require("./router/web/index")(app);

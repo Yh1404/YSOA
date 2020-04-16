@@ -86,18 +86,11 @@ export default {
         })
       );
     };
-    this.ws.onopen();
+    // this.ws.onopen();
     this.ws.onmessage = async function(e) {
       const res = await self.$axios.get(`/web/document/${e.data}`);
-      console.log(res.data);
       self.$alert(`请您尽快完成公文：${res.data.title}的审批`, `催办消息`, {
-        confirmButtonText: "确定",
-        callback: action => {
-          self.$message({
-            type: "info",
-            message: `action: ${action}`
-          });
-        }
+        confirmButtonText: "确定"
       });
     };
   },
