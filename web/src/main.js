@@ -7,9 +7,9 @@ import axios from "axios";
 import store from "./store";
 import moment from "moment";
 
-const ws = new WebSocket("ws://localhost:2333");
-
 moment.locale("zh-cn");
+
+let ws = new WebSocket("ws://localhost:2333");
 
 Vue.use(ElementUI);
 

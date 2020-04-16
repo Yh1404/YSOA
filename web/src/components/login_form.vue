@@ -13,7 +13,7 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="login()">登录</el-button>
+      <el-button type="primary" @click.prevent="login()">登录</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -35,19 +35,25 @@ export default {
       }
     };
   },
+  created() {
+    var lett = this;
+    document.onkeydown = function() {
+      //回车键登录
+      var key = window.event.keyCode;
+      if (key == 13) {
+        lett.login();
+      }
+    };
+  },
   methods: {
     async login() {
       this.$refs["loginForm"].validate(async valid => {
         if (valid) {
           try {
             const res = await this.$axios.post("/web/login", this.loginForm);
-
             if (res.data.user) {
               this.$store.dispatch("SetTokenAsync", res.data.token);
               this.$store.dispatch("SetUserInfoAsync", res.data.user);
-              this.ws.onopen = function() {
-                this.ws.send(res.data.user._id);
-              };
               this.$message({
                 type: "success",
                 message: "登录成功！"

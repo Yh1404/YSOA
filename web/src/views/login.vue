@@ -3,15 +3,7 @@
     <header>
       公文逐级审批系统
     </header>
-    <el-switch
-      v-model="flag"
-      active-text="登录"
-      inactive-text="注册"
-      active-value="login"
-      inactive-value="regis"
-      active-color="#00a8ff"
-      inactive-color="#00a8ff"
-    >
+    <el-switch v-model="flag" active-text="登录" inactive-text="注册" active-value="login" inactive-value="regis" active-color="#00a8ff" inactive-color="#00a8ff">
     </el-switch>
     <div class="form_box">
       <transition name="el-zoom-in-center" mode="out-in">

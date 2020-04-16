@@ -90,11 +90,11 @@ module.exports = app => {
     res.send(user);
   });
 
-  router.get("/api/web/document/:id?*", async (req, res) => {
+  router.get("/api/web/document/:id?", async (req, res) => {
     //查询公文
     let doc = {};
     if (req.params.id) {
-      doc = await Document.findOne({ _id: req.params.id });
+      doc = await Document.findById(req.params.id);
       res.send(doc);
     } else {
       doc = await Document.findOne({}).sort({ _id: -1 }).populate("flow").limit(1);

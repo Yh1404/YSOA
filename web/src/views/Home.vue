@@ -68,12 +68,38 @@ export default {
         identity: window.sessionStorage.getItem("identity"),
         id: window.sessionStorage.getItem("id")
       },
-      date: ""
+      date: "" //时间
     };
   },
   created() {
     window.onunload = this.logout;
     setInterval(this.getDate, 1000);
+  },
+  mounted() {
+    let self = this;
+    this.ws.onopen = function() {
+      //建立WebSocket连接
+      self.ws.send(
+        JSON.stringify({
+          id: sessionStorage.getItem("id"),
+          type: "LOGIN"
+        })
+      );
+    };
+    this.ws.onopen();
+    this.ws.onmessage = async function(e) {
+      const res = await self.$axios.get(`/web/document/${e.data}`);
+      console.log(res.data);
+      self.$alert(`请您尽快完成公文：${res.data.title}的审批`, `催办消息`, {
+        confirmButtonText: "确定",
+        callback: action => {
+          self.$message({
+            type: "info",
+            message: `action: ${action}`
+          });
+        }
+      });
+    };
   },
   methods: {
     getDate() {

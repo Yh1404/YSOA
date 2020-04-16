@@ -4,7 +4,9 @@
       <span>公文详情|{{ document.title }}</span>
     </el-header>
     <el-steps :active="step" align-center>
-      <el-step :description="document.status === 'CANCEL' ? '公文已撤销' : (index == step ? '审批中' : step < index ? '待审批' : '完成') " v-for="(item, index) in stepUsers" :key="item._id" :title="item.name + '(' + item.department.name + ',' + item.identity.name + ')'">
+      <el-step :description="
+          document.status === 'CANCEL' ? '公文已撤销' : index == step ? '审批中' : step < index ? '待审批' : '完成'
+        " v-for="(item, index) in stepUsers" :key="item._id" :title="item.name + '(' + item.department.name + ',' + item.identity.name + ')'">
       </el-step>
     </el-steps>
     <div class="button_box">
@@ -16,10 +18,6 @@
   </div>
 </template>
 <script>
-const ws = new WebSocket("ws://localhost:2333");
-ws.onmessage = function(e) {
-  console.log(e.data);
-};
 export default {
   data() {
     return {
@@ -90,6 +88,14 @@ export default {
     async hurry() {
       //催办公文
       await this.$axios.get(`/web/hurry/ ?docID=${this.document._id}`);
+      this.ws.send(
+        //发送催办消息
+        JSON.stringify({
+          to: this.document.currentNodeID,
+          type: "HURRY",
+          doc: this.document._id
+        })
+      );
       this.$message({
         type: "success",
         message: "催办成功"
