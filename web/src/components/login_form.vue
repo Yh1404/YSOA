@@ -45,6 +45,16 @@ export default {
       }
     };
   },
+  beforeDestroy() {
+    let self = this;
+    //建立WebSocket连接
+    self.ws.send(
+      JSON.stringify({
+        id: sessionStorage.getItem("id"),
+        type: "LOGIN"
+      })
+    );
+  },
   methods: {
     async login() {
       this.$refs["loginForm"].validate(async valid => {
@@ -58,7 +68,7 @@ export default {
                 type: "success",
                 message: "登录成功！"
               });
-              this.$cookie.set("user", res.data.user._id);
+              this.$cookie.set("id", res.data.user._id);
               this.$router.push("/main");
             } else if (res.data.message === "该用户已登录") {
               this.$message.error("该用户已登录");

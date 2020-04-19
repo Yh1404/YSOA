@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     async fetchFlow() {
-      const res = await this.$axios.get("/web/flow");
+      const res = await this.$axios.get("/web/flow", { headers: { accessToken: sessionStorage.getItem("token") } });
       this.flows = res.data;
     },
     async submit() {
@@ -81,7 +81,7 @@ export default {
         cc: ccitem,
         status: "PENDING"
       };
-      await this.$axios.post("/web/document", doc);
+      await this.$axios.post("/web/document", doc, { headers: { accessToken: sessionStorage.getItem("token") } });
       this.$message({
         type: "success",
         message: "提交成功"
@@ -89,7 +89,9 @@ export default {
       this.docInfo = "docInfo";
     },
     async fetchDepartment() {
-      const dep = await this.$axios.get("/web/department");
+      const dep = await this.$axios.get("/web/department", {
+        headers: { accessToken: sessionStorage.getItem("token") }
+      });
       this.option = clone(dep.data);
     }
   },

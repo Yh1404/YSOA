@@ -58,6 +58,7 @@
 <script>
 import broadcast from "../components/broadcast";
 import draft from "../components/draft";
+import DocumentManage from "../components/DocumentManage";
 export default {
   data() {
     return {
@@ -72,27 +73,10 @@ export default {
     };
   },
   created() {
-    window.onunload = this.logout;
     setInterval(this.getDate, 1000);
   },
-  mounted() {
-    let self = this;
-    this.ws.onopen = function() {
-      //建立WebSocket连接
-      self.ws.send(
-        JSON.stringify({
-          id: sessionStorage.getItem("id"),
-          type: "LOGIN"
-        })
-      );
-    };
-    // this.ws.onopen();
-    this.ws.onmessage = async function(e) {
-      const res = await self.$axios.get(`/web/document/${e.data}`);
-      self.$alert(`请您尽快完成公文：${res.data.title}的审批`, `催办消息`, {
-        confirmButtonText: "确定"
-      });
-    };
+  beforeDestroy() {
+    this.logout();
   },
   methods: {
     getDate() {
@@ -111,20 +95,28 @@ export default {
       this.$router.go(0);
     },
     select(index) {
-      if (index == "1-2") {
-        this.flag = "broadcast";
-      } else if (index == "1-1-1") {
-        this.flag = "draft";
+      switch (index) {
+        case "1-2":
+          this.flag = "broadcast";
+          break;
+        case "1-1-1":
+          this.flag = "draft";
+          break;
+        case "1-1-2":
+          this.flag = "DocumentManage";
+          break;
+        default:
+          break;
       }
     }
   },
   components: {
     broadcast: broadcast,
-    draft: draft
+    draft: draft,
+    DocumentManage: DocumentManage
   }
 };
 </script>
->
 <style lang="css" scoped>
 .el-container {
   height: 100%;

@@ -2,8 +2,6 @@
 
 const ws = require("nodejs-websocket");
 
-const AllUSer = new Array();
-
 const createServer = () => {
   let server = ws
     .createServer(connection => {
@@ -11,20 +9,18 @@ const createServer = () => {
         let data = JSON.parse(result);
         switch (data.type) {
           case "LOGIN":
-            if (AllUSer.indexOf(data.id) > -1) return;
-            else {
-              AllUSer.push(data.id);
-              connection.id = data.id;
-            }
+            connection.id = data.id;
             break;
           case "HURRY":
-            sendToUser(data.doc, data.to);
+            sendToUser(data.type, data.doc, data.to);
+            break;
+          case "HeartBeat":
+            connection.sendText(JSON.stringify({ type: data.type, content: "心跳正常..." }));
             break;
           default:
             break;
         }
       });
-
       connection.on("connect", function (code) {
         console.log("建立连接", code);
         console.log(connection);
@@ -33,20 +29,24 @@ const createServer = () => {
       connection.on("close", function (code) {
         console.log("关闭连接", code);
       });
-
-      connection.on("error", function (code) {
-        console.log("异常关闭", code);
-      });
+      connection.on("error", function (code) {});
     })
     .listen(2333);
-  function sendToUser(content, to) {
+
+  function sendToUser(type, content, to) {
     //向指定用户发送消息
-    server.connections.forEach(conn => {
-      if (conn.id === to) {
-        conn.sendText(content);
-      }
-    });
-    return server;
+    switch (type) {
+      case "HURRY":
+        server.connections.forEach(conn => {
+          if (conn.id === to) {
+            conn.sendText(JSON.stringify({ type: type, content: content }));
+          }
+        });
+        break;
+      default:
+        break;
+    }
   }
+  return server;
 };
 module.exports = createServer();

@@ -47,7 +47,9 @@ export default {
   },
   methods: {
     async fetchTableData() {
-      const res = await this.$axios.get("/web/broadcast");
+      const res = await this.$axios.get("/web/broadcast", {
+        headers: { accessToken: sessionStorage.getItem("token") }
+      });
       this.tableData = res.data;
     },
     handleCurrentPage(index) {
