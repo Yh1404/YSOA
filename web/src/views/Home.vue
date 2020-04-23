@@ -41,17 +41,19 @@
                   <i class="el-icon-tickets"></i>
                   <span>我的资讯</span>
                 </el-menu-item>
-                <el-menu-item index="1-3">
-                  <i class="el-icon-chat-dot-square"></i>
-                  <span>我的消息</span>
-                </el-menu-item>
+                <el-badge :value="newsCount">
+                  <el-menu-item index="1-3">
+                    <i class="el-icon-chat-dot-square"></i>
+                    <span>我的消息</span>
+                  </el-menu-item>
+                </el-badge>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
         </el-col>
         <el-main>
           <keep-alive :exclude="['DocumentInfo','DocumentManage']">
-            <component :is="flag" :userInfo="user" :Doc="param" @changeComponet="switchCom"></component>
+            <component :is="flag" :userInfo="user" :Doc="param" @fetchCount="Count" @changeComponet="switchCom"></component>
           </keep-alive>
         </el-main>
       </el-container>
@@ -60,17 +62,20 @@
   </el-container>
 </template>
 <script>
-import broadcast from "../components/broadcast";
-import draft from "../components/draft";
+import broadcast from "../components/Broadcast";
+import draft from "../components/Draft";
 import DocumentManage from "../components/DocumentManage";
 import DocumentInfo from "../components/DocumentInfo";
 import News from "../components/News";
+
 export default {
   data() {
     return {
-      param: "",
-      flag: "",
+      newsCount: "", //消息数量
+      param: "", //切换组件携带的参数
+      flag: "", //切换组件标志
       user: {
+        //用户信息
         name: window.sessionStorage.getItem("name"),
         department: window.sessionStorage.getItem("department"),
         identity: window.sessionStorage.getItem("identity"),
@@ -86,6 +91,9 @@ export default {
     this.logout();
   },
   methods: {
+    Count(data) {
+      this.newsCount = data;
+    },
     getDate() {
       this.date = this.moment().format("YYYY-MM-DD h:mm:ss a");
     },
@@ -102,6 +110,7 @@ export default {
       this.$router.go(0);
     },
     switchCom(params) {
+      //切换组件函数
       this.param = params.param;
       this.flag = params.component;
     },
@@ -136,6 +145,7 @@ export default {
 <style lang="css" scoped>
 .el-container {
   height: 100%;
+  overflow: hidden;
 }
 .el-header,
 .el-footer {
@@ -189,6 +199,6 @@ b {
   position: relative;
   background-color: #e9eef3;
   color: #333;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 </style>

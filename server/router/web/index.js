@@ -161,6 +161,11 @@ module.exports = app => {
     const news = await New.find({ reader: req.params.id });
     res.send(news);
   });
+
+  router.put("/api/web/news/:id", async (req, res) => {
+    await New.findByIdAndUpdate(req.params.id, { status: "READ" });
+    res.send("消息已读");
+  });
   app.use("/", router);
 
   function verifyToken(req, res, next) {
