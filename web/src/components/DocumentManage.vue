@@ -1,10 +1,10 @@
 <template>
   <div>
-    <el-table :data="currentData" max-height="400px">
+    <el-table :data="currentData" max-height="400px" highlight-current-row>
       <el-table-column label="日期" prop="date"> </el-table-column>
       <el-table-column label="标题" prop="title" show-overflow-tooltip> </el-table-column>
       <el-table-column label="发起人" prop="originator.name"> </el-table-column>
-      <el-table-column label="状态" prop="currentNodeID.name"> </el-table-column>
+      <el-table-column label="当前节点" prop="currentNodeID.name"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
@@ -35,11 +35,17 @@ export default {
   },
   methods: {
     async fetchNews() {
-      const res = await this.$axios.get(`/web/document/${sessionStorage.getItem(`id`)}`);
+      const res = await this.$axios.get(`/web/document/${sessionStorage.getItem(`id`)}`, {
+        headers: { accessToken: sessionStorage.getItem("token") }
+      });
       this.tableData = res.data;
     },
-    handleEdit(index, row) {
-      console.log(index, row);
+    handleEdit(index) {
+      let payload = {
+        component: "DocumentInfo",
+        param: this.currentData[index]
+      };
+      this.$emit("changeComponet", payload);
     },
     handleCurrentPage(index) {
       this.currentData = this.tableData.slice((index - 1) * 5, index * 5);

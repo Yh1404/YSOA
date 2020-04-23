@@ -46,14 +46,14 @@ export default {
     };
   },
   beforeDestroy() {
-    let self = this;
-    //建立WebSocket连接
-    self.ws.send(
-      JSON.stringify({
-        id: sessionStorage.getItem("id"),
-        type: "LOGIN"
-      })
-    );
+    // let self = this;
+    // //建立WebSocket连接
+    // self.ws.send(
+    //   JSON.stringify({
+    //     id: sessionStorage.getItem("id"),
+    //     type: "LOGIN"
+    //   })
+    // );
   },
   methods: {
     async login() {

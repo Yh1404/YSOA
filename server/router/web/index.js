@@ -1,12 +1,10 @@
 module.exports = app => {
   const express = require("express");
   const router = express.Router();
-
   const server = require("../../plugins/websocket");
   const jwt = require("jsonwebtoken");
 
-  const mongoose = require("mongoose");
-
+  //mongo model
   const User = require("../../models/User");
   const Dep = require("../../models/Department");
   const Identity = require("../../models/Identity");
@@ -15,15 +13,15 @@ module.exports = app => {
   const Flow = require("../../models/Flow");
   const New = require("../../models/news");
 
-  const SECRET = "iodcowei345c$#%@$!j8esawfj23(&U&n";
+  const SECRET = "iodcowei345c$#%@$!j8esawfj23(&U&n"; //Token密钥
 
-  router.get("/api/web/department", verifyToken, async (req, res) => {
+  router.get("/api/web/department", async (req, res) => {
     //to get departments
     const departments = await Dep.find().populate("parent").populate("users").lean();
     res.send(departments);
   });
 
-  router.get("/api/web/identity", verifyToken, async (req, res) => {
+  router.get("/api/web/identity", async (req, res) => {
     //to get identities
     const identity = await Identity.find();
     res.send(identity);
@@ -97,35 +95,45 @@ module.exports = app => {
     //查询公文,
     //传入用户ID则查询该用户的公文
     //传入公文ID则查询该公文
-    //不携带ID则查询最新公文
+    //不携带ID则查询最新的一条公文
     let doc;
     let result = new Array();
     if (req.params.id) {
       doc =
-        (await Document.findById(req.params.id)) ||
+        (await Document.findById(req.params.id)
+          .populate({ path: "originator", model: "User" })
+          .populate({ path: "currentNodeID", model: "User" })
+          .lean()) ||
         (await Document.find({})
-          .populate({ path: "flow", model: "Flow", populate: { path: "to_users", model: "User" } })
-          .populate("originator")
-          .populate("currentNodeID")
+          .populate({
+            path: "flow",
+            model: "Flow"
+          })
+          .populate({ path: "originator", model: "User" })
+          .populate({ path: "currentNodeID", model: "User" })
+          .sort({ _id: -1 })
           .lean());
       for (let i = 0; i < doc.length; i++) {
         for (let j = 0; j < doc[i].flow.to_users.length; j++) {
+          //若用户为公文的发起人过经办人，则将该公文反馈给用户
           if (doc[i].originator._id == req.params.id || doc[i].flow.to_users[j]._id == req.params.id) {
             result.push(doc[i]);
             break;
           }
         }
       }
-      res.send(result);
+      if (result.length == 0) {
+        res.send(doc);
+      } else res.send(result);
     } else {
-      doc = await Document.findOne().sort({ _id: -1 }).populate("flow").limit(1);
+      doc = await Document.findOne()
+        .sort({ _id: -1 })
+        .populate("flow")
+        .populate({ path: "originator", model: "User" })
+        .populate({ path: "currentNodeID", model: "User" })
+        .limit(1);
       res.send(doc);
     }
-  });
-
-  router.put("/api/web/cancel_document/:id", verifyToken, async (req, res) => {
-    const doc = await Document.findByIdAndUpdate(req.params.id, { status: "CANCEL" });
-    res.send(doc);
   });
 
   router.get("/api/web/hurry/:docID", verifyToken, async (req, res) => {
@@ -144,9 +152,14 @@ module.exports = app => {
     res.send("ok");
   });
 
-  router.put("/api/web/reject_document/:id", async (req, res) => {
-    await Document.findByIdAndUpdate(req.params.id, { status: "REJECT" });
+  router.put("/api/web/document/:id", verifyToken, async (req, res) => {
+    await Document.findByIdAndUpdate(req.params.id, req.body.change);
     res.send("ok");
+  });
+
+  router.get("/api/web/news/:id", async (req, res) => {
+    const news = await New.find({ reader: req.params.id });
+    res.send(news);
   });
   app.use("/", router);
 

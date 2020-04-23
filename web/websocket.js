@@ -35,6 +35,12 @@ function initEventHandle(ws, wsUrl, that) {
           confirmButtonText: "确定"
         });
         break;
+      case "REJECT":
+        res = await that.$axios.get(`/web/document/${data.content}`);
+        that.$alert(`您的公文：${res.data.title} 请求被驳回`, `消息`, {
+          confirmButtonText: "确定"
+        });
+        break;
       case "HeartBeat":
         console.log(data.content);
         break;

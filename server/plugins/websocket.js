@@ -14,6 +14,9 @@ const createServer = () => {
           case "HURRY":
             sendToUser(data.type, data.doc, data.to);
             break;
+          case "REJECT":
+            sendToUser(data.type, data.doc, data.to);
+            break;
           case "HeartBeat":
             connection.sendText(JSON.stringify({ type: data.type, content: "心跳正常..." }));
             break;
@@ -37,6 +40,13 @@ const createServer = () => {
     //向指定用户发送消息
     switch (type) {
       case "HURRY":
+        server.connections.forEach(conn => {
+          if (conn.id === to) {
+            conn.sendText(JSON.stringify({ type: type, content: content }));
+          }
+        });
+        break;
+      case "REJECT":
         server.connections.forEach(conn => {
           if (conn.id === to) {
             conn.sendText(JSON.stringify({ type: type, content: content }));

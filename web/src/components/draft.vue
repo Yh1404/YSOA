@@ -26,7 +26,6 @@
   </div>
 </template>
 <script>
-import docInfo from "../components/DocumentInfo";
 function clone(dep) {
   let option = [];
   for (let i = 0; i < dep.length; i++) {
@@ -86,7 +85,13 @@ export default {
         type: "success",
         message: "提交成功"
       });
-      this.docInfo = "docInfo";
+      let param = await this.$axios.get("/web/document", { headers: { accessToken: sessionStorage.getItem("token") } });
+
+      let payload = {
+        component: "DocumentInfo",
+        param: param.data
+      };
+      this.$emit("changeComponet", payload);
     },
     async fetchDepartment() {
       const dep = await this.$axios.get("/web/department", {
@@ -94,9 +99,6 @@ export default {
       });
       this.option = clone(dep.data);
     }
-  },
-  components: {
-    docInfo
   }
 };
 </script>

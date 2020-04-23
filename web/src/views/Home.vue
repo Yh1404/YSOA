@@ -41,13 +41,17 @@
                   <i class="el-icon-tickets"></i>
                   <span>我的资讯</span>
                 </el-menu-item>
+                <el-menu-item index="1-3">
+                  <i class="el-icon-chat-dot-square"></i>
+                  <span>我的消息</span>
+                </el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
         </el-col>
         <el-main>
-          <keep-alive>
-            <component :is="flag" :userInfo="user"></component>
+          <keep-alive :exclude="['DocumentInfo','DocumentManage']">
+            <component :is="flag" :userInfo="user" :Doc="param" @changeComponet="switchCom"></component>
           </keep-alive>
         </el-main>
       </el-container>
@@ -59,9 +63,12 @@
 import broadcast from "../components/broadcast";
 import draft from "../components/draft";
 import DocumentManage from "../components/DocumentManage";
+import DocumentInfo from "../components/DocumentInfo";
+import News from "../components/News";
 export default {
   data() {
     return {
+      param: "",
       flag: "",
       user: {
         name: window.sessionStorage.getItem("name"),
@@ -94,6 +101,10 @@ export default {
     async refresh() {
       this.$router.go(0);
     },
+    switchCom(params) {
+      this.param = params.param;
+      this.flag = params.component;
+    },
     select(index) {
       switch (index) {
         case "1-2":
@@ -105,6 +116,9 @@ export default {
         case "1-1-2":
           this.flag = "DocumentManage";
           break;
+        case "1-3":
+          this.flag = "News";
+          break;
         default:
           break;
       }
@@ -113,7 +127,9 @@ export default {
   components: {
     broadcast: broadcast,
     draft: draft,
-    DocumentManage: DocumentManage
+    DocumentManage: DocumentManage,
+    DocumentInfo: DocumentInfo,
+    News: News
   }
 };
 </script>
@@ -173,6 +189,6 @@ b {
   position: relative;
   background-color: #e9eef3;
   color: #333;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 </style>
