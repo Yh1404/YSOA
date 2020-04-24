@@ -158,7 +158,7 @@ module.exports = app => {
   });
 
   router.get("/api/web/news/:id", async (req, res) => {
-    const news = await New.find({ reader: req.params.id });
+    const news = await New.find({ reader: req.params.id }).sort({ _id: -1 });
     res.send(news);
   });
 

@@ -4,7 +4,7 @@
     <el-badge :is-dot="item.status === 'UNREAD' ? true : false " v-for="item in news" :key="item._id">
       <el-card shadow="hover" @dblclick.native="readNew(item._id)">
         <p>{{item.type}}</p>
-        <span>{{item.body}}</span>
+        <span>{{ite
       </el-card>
     </el-badge>
   </div>
@@ -60,6 +60,7 @@ export default {
 .el-card {
   margin-bottom: 10px;
   border-radius: 20px;
+  text-align: left;
 }
 </style>
 
