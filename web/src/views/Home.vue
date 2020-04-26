@@ -8,8 +8,8 @@
           <b>{{ `(${user.department},${user.identity})` }}</b>
         </div>
         <div class="date">
-          <h1>北京时间：</h1>
-          <h1>{{ date }}</h1>
+          <p>北京时间：</p>
+          <p>{{ date }}</p>
         </div>
         <span class="el-icon-refresh-right refresh" title="刷新页面" @click="refresh()"></span>
         <span class="el-icon-switch-button switch" title="退出登录" @click="logout()"></span>
@@ -52,8 +52,14 @@
           </el-menu>
         </el-col>
         <el-main>
-          <keep-alive :exclude="['DocumentInfo','DocumentManage']">
-            <component :is="flag" :userInfo="user" :Doc="param" @fetchCount="Count" @changeComponet="switchCom"></component>
+          <keep-alive :exclude="['DocumentInfo', 'DocumentManage']">
+            <component
+              :is="flag"
+              :userInfo="user"
+              :Doc="param"
+              @fetchCount="Count"
+              @changeComponet="switchCom"
+            ></component>
           </keep-alive>
         </el-main>
       </el-container>
@@ -104,6 +110,7 @@ export default {
         type: "success",
         message: "退出成功"
       });
+      this.$cookie.delete("id");
       this.$router.push("/login");
     },
     async refresh() {

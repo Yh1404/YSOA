@@ -157,12 +157,12 @@ module.exports = app => {
     res.send("ok");
   });
 
-  router.get("/api/web/news/:id", async (req, res) => {
+  router.get("/api/web/news/:id", verifyToken, async (req, res) => {
     const news = await New.find({ reader: req.params.id }).sort({ _id: -1 });
     res.send(news);
   });
 
-  router.put("/api/web/news/:id", async (req, res) => {
+  router.put("/api/web/news/:id", verifyToken, async (req, res) => {
     await New.findByIdAndUpdate(req.params.id, { status: "READ" });
     res.send("消息已读");
   });

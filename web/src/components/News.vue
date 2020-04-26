@@ -1,10 +1,10 @@
 <template>
   <div>
     <div></div>
-    <el-badge :is-dot="item.status === 'UNREAD' ? true : false " v-for="item in news" :key="item._id">
+    <el-badge :is-dot="item.status === 'UNREAD' ? true : false" v-for="item in news" :key="item._id">
       <el-card shadow="hover" @dblclick.native="readNew(item._id)">
-        <p>{{item.type}}</p>
-        <span>{{ite
+        <p>{{ item.type }}</p>
+        <span>{{ item.title }}</span>
       </el-card>
     </el-badge>
   </div>
@@ -63,4 +63,3 @@ export default {
   text-align: left;
 }
 </style>
-

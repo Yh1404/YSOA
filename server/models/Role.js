@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 const schema = new mongoose.Schema({
   role: {
     type: String,
-    unique: true,
-    default: "user"
+    unique: true
   }
 });
 
