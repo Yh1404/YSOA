@@ -40,8 +40,26 @@ module.exports = app => {
     res.send(users);
   });
   router.post("/api/admin/flow", async (req, res) => {
+    //添加流程API
     const flow = await Flow.create(req.body);
     flow.save();
+    res.send("ok");
+  });
+  router.get("/api/admin/flow/:id?", async (req, res) => {
+    if (req.params.id) {
+      const flow = await Flow.findById(req.params.id).populate("to_users");
+      res.send(flow);
+    } else {
+      const flows = await Flow.find({}).populate("to_users");
+      res.send(flows);
+    }
+  });
+  router.put(`/api/admin/flow/:id`, async (req, res) => {
+    await Flow.findByIdAndUpdate(req.params.id, req.body);
+    res.send("ok");
+  });
+  router.delete(`/api/admin/flow/:id`, async (req, res) => {
+    await Flow.findByIdAndDelete(req.params.id);
     res.send("ok");
   });
   app.use("/", router);

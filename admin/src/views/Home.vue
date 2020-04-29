@@ -30,11 +30,11 @@
                   </template>
                   <el-menu-item index="1-1-1">
                     <i class="el-icon-edit"></i>
-                    <span>添加流程</span>
+                    <span>添加/修改流程</span>
                   </el-menu-item>
                   <el-menu-item index="1-1-2">
                     <i class="el-icon-document-copy"></i>
-                    <span>修改流程</span>
+                    <span>流程管理</span>
                   </el-menu-item>
                 </el-submenu>
                 <el-submenu index="1-2">
@@ -88,7 +88,9 @@
           </el-menu>
         </el-col>
         <el-main>
-          <component :is="flag" />
+          <keep-alive :exclude="['addFlow','FlowManage']">
+            <component :is="flag" @switchCom="switchComponent" :id="param" />
+          </keep-alive>
         </el-main>
       </el-container>
     </el-container>
@@ -98,10 +100,12 @@
 <script>
 // @ is an alias to /src
 import addFlow from "../components/addFlow";
+import FlowManage from "../components/FlowManage";
 export default {
   name: "Home",
   data() {
     return {
+      param: "",
       date: "",
       flag: "",
       user: {
@@ -117,6 +121,9 @@ export default {
       switch (index) {
         case "1-1-1":
           this.flag = "addFlow";
+          break;
+        case "1-1-2":
+          this.flag = "FlowManage";
           break;
         default:
           break;
@@ -137,10 +144,15 @@ export default {
     },
     refresh() {
       this.$router.go(0);
+    },
+    switchComponent(component) {
+      this.flag = component.component;
+      this.param = component.id;
     }
   },
   components: {
-    addFlow
+    addFlow,
+    FlowManage
   }
 };
 </script>

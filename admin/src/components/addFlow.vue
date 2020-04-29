@@ -28,18 +28,41 @@ export default {
       users: []
     };
   },
+  props: {
+    id: {}
+  },
   created() {
     this.fetchUser();
+    this.id && this.fetch();
   },
   methods: {
     async submit() {
-      await this.$axios.post("/admin/flow", this.flow);
-      this.$message("添加成功");
+      if (this.id) {
+        //存在流程id时，执行流程修改操作
+        await this.$axios.put(`/admin/flow/${this.id}`, this.flow);
+        this.$message("修改成功");
+        this.$emit("switchCom", { component: "FlowManage" });
+      } else {
+        //否则执行流程添加操作
+        await this.$axios.post("/admin/flow", this.flow);
+        this.$message("添加成功");
+        this.$emit("switchCom", { component: "FlowManage" });
+      }
+    },
+    async fetch() {
+      //通过流程id获取流程对象
+      const res = await this.$axios.get(`/admin/flow/${this.id}`);
+      let temp = [];
+      res.data.to_users.forEach(item => {
+        temp.push(item._id);
+      }); //封装流程对象
+      res.data.to_users = temp;
+      this.flow = res.data;
     },
     async fetchUser() {
+      //获取所有用户信息并封装
       const res = await this.$axios.get("/admin/user");
       res.data.forEach(item => {
-        console.log(item.department.name);
         item.value = `${item.department.name}/${item.identity.name}/${item.name}`;
       });
       this.users = res.data;
