@@ -70,7 +70,7 @@ module.exports = app => {
     if (user) res.send("ok");
   });
 
-  router.get("/api/web/broadcast", verifyToken, async (_req, res) => {
+  router.get("/api/web/broadcast", async (_req, res) => {
     const bc = await Broadcast.find();
     res.send(bc);
   });

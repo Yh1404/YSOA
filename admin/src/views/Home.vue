@@ -16,7 +16,7 @@
       </el-header>
       <el-container>
         <el-col :span="4" style="overflow:auto;">
-          <el-menu @select="select">
+          <el-menu @select="select" unique-opened>
             <el-submenu index="1">
               <template slot="title">
                 <i class="el-icon-s-grid"></i>
@@ -48,7 +48,7 @@
                   </el-menu-item>
                   <el-menu-item index="1-2-2">
                     <i class="el-icon-document-copy"></i>
-                    <span>修改用户</span>
+                    <span>用户管理</span>
                   </el-menu-item>
                 </el-submenu>
                 <el-submenu index="1-3">
@@ -58,7 +58,7 @@
                   </template>
                   <el-menu-item index="1-3-1">
                     <i class="el-icon-edit"></i>
-                    <span>资讯</span>
+                    <span>发布资讯</span>
                   </el-menu-item>
                   <el-menu-item index="1-3-2">
                     <i class="el-icon-document-copy"></i>
@@ -72,11 +72,11 @@
                   </template>
                   <el-menu-item index="1-4-1">
                     <i class="el-icon-edit"></i>
-                    <span>添加部门/岗位</span>
+                    <span>添加部门</span>
                   </el-menu-item>
                   <el-menu-item index="1-4-2">
                     <i class="el-icon-document-copy"></i>
-                    <span>部门/岗位管理</span>
+                    <span>部门管理</span>
                   </el-menu-item>
                 </el-submenu>
                 <el-menu-item index="1-5">
@@ -88,7 +88,7 @@
           </el-menu>
         </el-col>
         <el-main>
-          <keep-alive :exclude="['addFlow','FlowManage']">
+          <keep-alive :exclude="['addUser','addFlow','FlowManage','UserManage','PulishInfomation','InformationList']">
             <component :is="flag" @switchCom="switchComponent" :id="param" />
           </keep-alive>
         </el-main>
@@ -99,8 +99,13 @@
 </template>
 <script>
 // @ is an alias to /src
-import addFlow from "../components/addFlow";
-import FlowManage from "../components/FlowManage";
+import addFlow from "@/components/addFlow";
+import FlowManage from "@/components/FlowManage";
+import addUser from "@/components/addUser";
+import UserManage from "@/components/UserManage";
+import PulishInformation from "@/components/PulishInformation";
+import InformationList from "@/components/InformationList";
+import DepartmentManage from "@/components/DepartmentManage";
 export default {
   name: "Home",
   data() {
@@ -124,6 +129,21 @@ export default {
           break;
         case "1-1-2":
           this.flag = "FlowManage";
+          break;
+        case "1-2-1":
+          this.flag = "addUser";
+          break;
+        case "1-2-2":
+          this.flag = "UserManage";
+          break;
+        case "1-3-1":
+          this.flag = "PulishInformation";
+          break;
+        case "1-3-2":
+          this.flag = "InformationList";
+          break;
+        case "1-4-2":
+          this.flag = "DepartmentManage";
           break;
         default:
           break;
@@ -152,7 +172,12 @@ export default {
   },
   components: {
     addFlow,
-    FlowManage
+    FlowManage,
+    addUser,
+    UserManage,
+    PulishInformation,
+    InformationList,
+    DepartmentManage
   }
 };
 </script>
@@ -161,10 +186,12 @@ export default {
   height: 100%;
   overflow: hidden;
 }
-.el-header,
-.el-footer {
+.el-header {
   background-color: #fff;
   line-height: 60px;
+}
+.el-footer {
+  background-color: #3498db;
 }
 .switch,
 .refresh {

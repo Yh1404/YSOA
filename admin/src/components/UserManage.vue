@@ -3,37 +3,41 @@
     <el-table-column type="expand">
       <template slot-scope="props">
         <el-form label-position="left" inline class="demo-table-expand">
-          <el-form-item label="流程名称:">
+          <el-form-item label="用户名:">
+            <span>{{ props.row.username }}</span>
+          </el-form-item>
+          <el-form-item label="姓名:">
             <span>{{ props.row.name }}</span>
           </el-form-item>
-          <el-form-item label="经办人:">
-            <span>{{ props.row.AttentioLine }}</span>
-          </el-form-item>
-          <el-form-item label="流程ID:">
+          <el-form-item label="用户ID:">
             <span>{{ props.row._id }}</span>
           </el-form-item>
-          <el-form-item label="流程描述:">
-            <span>{{ props.row.description  }}</span>
+          <el-form-item label="职务岗位:">
+            <span>{{ props.row.position  }}</span>
+          </el-form-item>
+          <el-form-item label="电话:">
+            <span>{{ props.row.telephone  }}</span>
+          </el-form-item>
+          <el-form-item label="生日:">
+            <span>{{ props.row.birth  }}</span>
           </el-form-item>
         </el-form>
       </template>
     </el-table-column>
-    <el-table-column label="流程名称" prop="name">
+    <el-table-column label="用户名" prop="username">
     </el-table-column>
-    <el-table-column label="流程ID" prop="_id">
+    <el-table-column label="用户ID" prop="_id">
     </el-table-column>
-    <el-table-column label="流程描述" prop="description">
+    <el-table-column label="职务岗位" prop="position">
     </el-table-column>
     <el-table-column label="操作">
       <template slot-scope="scope">
-        <el-button size="mini" @click="change(scope.$index,scope.row)">修改</el-button>
+        <el-button size="mini" @click.native="change(scope.$index,scope.row)">修改 </el-button>
         <el-button size="mini" @click="handleDel(scope.$index, scope.row)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
 </template>
-
-
 <script>
 export default {
   data() {
@@ -46,30 +50,24 @@ export default {
   },
   methods: {
     async fetchTableData() {
-      const res = await this.$axios.get("/admin/flow");
-      res.data.forEach(item1 => {
-        //构建经办人数据结构
-        let AttentioLine = [];
-        item1.to_users.forEach(item2 => {
-          AttentioLine.push(item2.name);
-        });
-        item1.AttentioLine = AttentioLine.join("->");
+      const res = await this.$axios.get("/admin/user");
+      res.data.forEach(item => {
+        item.position = `${item.department.name}/${item.identity.name}`;
       });
       this.tableData = res.data;
     },
     change(index, row) {
-      console.log("adada");
-      this.$emit("switchCom", { component: "addFlow", id: row._id });
+      console.log("dadad");
+      this.$emit("switchCom", { component: "addUser", id: row._id });
     },
     async handleDel(index, row) {
-      await this.$axios.delete(`/admin/flow/${row._id}`);
+      await this.$axios.delete(`/admin/user/${row._id}`);
       this.$message("删除成功");
       this.fetchTableData();
     }
   }
 };
 </script>
-
 <style scoped>
 .FMpanel {
   width: 99%;

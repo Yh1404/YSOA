@@ -1,39 +1,36 @@
 <template>
-  <el-table :data="tableData" style="width: 100%">
+  <el-table :data="tableData" style="width: 100%" :show-overflow-tooltip="true">
     <el-table-column type="expand">
       <template slot-scope="props">
         <el-form label-position="left" inline class="demo-table-expand">
-          <el-form-item label="流程名称:">
-            <span>{{ props.row.name }}</span>
+          <el-form-item label="标题:">
+            <span>{{ props.row.title }}</span>
           </el-form-item>
-          <el-form-item label="经办人:">
-            <span>{{ props.row.AttentioLine }}</span>
-          </el-form-item>
-          <el-form-item label="流程ID:">
+          <el-form-item label="公告ID:">
             <span>{{ props.row._id }}</span>
           </el-form-item>
-          <el-form-item label="流程描述:">
-            <span>{{ props.row.description  }}</span>
+          <el-form-item label="公告内容:">
+            <span>{{ props.row.body }}</span>
+          </el-form-item>
+          <el-form-item label="发布日期:">
+            <span>{{ props.row.date }}</span>
           </el-form-item>
         </el-form>
       </template>
     </el-table-column>
-    <el-table-column label="流程名称" prop="name">
+    <el-table-column label="日期" prop="date">
     </el-table-column>
-    <el-table-column label="流程ID" prop="_id">
+    <el-table-column label="标题" prop="title">
     </el-table-column>
-    <el-table-column label="流程描述" prop="description">
+    <el-table-column label="摘要" prop="body">
     </el-table-column>
     <el-table-column label="操作">
       <template slot-scope="scope">
-        <el-button size="mini" @click="change(scope.$index,scope.row)">修改</el-button>
         <el-button size="mini" @click="handleDel(scope.$index, scope.row)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
 </template>
-
-
 <script>
 export default {
   data() {
@@ -46,30 +43,23 @@ export default {
   },
   methods: {
     async fetchTableData() {
-      const res = await this.$axios.get("/admin/flow");
-      res.data.forEach(item1 => {
-        //构建经办人数据结构
-        let AttentioLine = [];
-        item1.to_users.forEach(item2 => {
-          AttentioLine.push(item2.name);
-        });
-        item1.AttentioLine = AttentioLine.join("->");
-      });
+      const res = await this.$axios.get("/web/broadcast");
+      // res.data.forEach(item => {
+      //   item.abstract = item.body.substr(0, 12);
+      //   if (item.body.length > 12) {
+      //     item.abstract += "......";
+      //   }
+      // });
       this.tableData = res.data;
     },
-    change(index, row) {
-      console.log("adada");
-      this.$emit("switchCom", { component: "addFlow", id: row._id });
-    },
     async handleDel(index, row) {
-      await this.$axios.delete(`/admin/flow/${row._id}`);
+      await this.$axios.delete(`/admin/broadcast/${row._id}`);
       this.$message("删除成功");
       this.fetchTableData();
     }
   }
 };
 </script>
-
 <style scoped>
 .FMpanel {
   width: 99%;
