@@ -33,6 +33,7 @@ export default {
       this.fetchTableData();
     },
     async fetchTableData() {
+      this.tableData = [];
       const res = await this.$axios.get("/admin/department");
       let dep = res.data;
       let length = dep.length;

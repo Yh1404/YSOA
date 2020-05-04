@@ -96,5 +96,9 @@ module.exports = app => {
     await Dep.findByIdAndDelete(req.params.id);
     res.send("ok");
   });
+  router.post("/api/admin/department", async (req, res) => {
+    await Dep.insertMany(req.body);
+    res.send("ok");
+  });
   app.use("/", router);
 };

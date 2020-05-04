@@ -88,7 +88,7 @@
           </el-menu>
         </el-col>
         <el-main>
-          <keep-alive :exclude="['addUser','addFlow','FlowManage','UserManage','PulishInfomation','InformationList']">
+          <keep-alive :exclude="/./">
             <component :is="flag" @switchCom="switchComponent" :id="param" />
           </keep-alive>
         </el-main>
@@ -106,6 +106,7 @@ import UserManage from "@/components/UserManage";
 import PulishInformation from "@/components/PulishInformation";
 import InformationList from "@/components/InformationList";
 import DepartmentManage from "@/components/DepartmentManage";
+import addDepartment from "@/components/addDepartment";
 export default {
   name: "Home",
   data() {
@@ -142,6 +143,9 @@ export default {
         case "1-3-2":
           this.flag = "InformationList";
           break;
+        case "1-4-1":
+          this.flag = "addDepartment";
+          break;
         case "1-4-2":
           this.flag = "DepartmentManage";
           break;
@@ -177,7 +181,8 @@ export default {
     UserManage,
     PulishInformation,
     InformationList,
-    DepartmentManage
+    DepartmentManage,
+    addDepartment
   }
 };
 </script>
