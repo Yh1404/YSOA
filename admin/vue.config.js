@@ -1,5 +1,6 @@
 module.exports = {
   devServer: {
+    disableHostCheck: true,
     proxy: {
       "/api": {
         target: "http://localhost:3000/api/", //要请求的域名

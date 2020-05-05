@@ -7,12 +7,6 @@
       <el-input show-password placeholder="密码" prefix-icon="el-icon-lock" v-model="loginForm.password"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-radio-group v-model="role">
-        <el-radio label="admin">管理员</el-radio>
-        <el-radio label="user">用户</el-radio>
-      </el-radio-group>
-    </el-form-item>
-    <el-form-item>
       <el-button type="primary" @click.prevent="login()">登录</el-button>
     </el-form-item>
   </el-form>
@@ -49,28 +43,24 @@ export default {
     async login() {
       this.$refs["loginForm"].validate(async valid => {
         if (valid) {
-          if (this.role === "user") {
-            try {
-              const res = await this.$axios.post("/web/login", this.loginForm);
-              if (res.data.user) {
-                this.$store.dispatch("SetTokenAsync", res.data.token);
-                this.$store.dispatch("SetUserInfoAsync", res.data.user);
-                this.$message({
-                  type: "success",
-                  message: "登录成功！"
-                });
-                this.$cookie.set("id", res.data.user._id);
-                this.$router.push("/main");
-              } else if (res.data.message === "该用户已登录") {
-                this.$message.error("该用户已登录");
-              } else if (res.data.message === "用户名不存在或密码错误") {
-                this.$message.error("用户名不存在或密码错误");
-              }
-            } catch {
-              this.$message.error("请重试！");
+          try {
+            const res = await this.$axios.post("/web/login", this.loginForm);
+            if (res.data.user) {
+              this.$store.dispatch("SetTokenAsync", res.data.token);
+              this.$store.dispatch("SetUserInfoAsync", res.data.user);
+              this.$message({
+                type: "success",
+                message: "登录成功！"
+              });
+              this.$cookie.set("id", res.data.user._id);
+              this.$router.push("/main");
+            } else if (res.data.message === "该用户已登录") {
+              this.$message.error("该用户已登录");
+            } else if (res.data.message === "用户名不存在或密码错误") {
+              this.$message.error("用户名不存在或密码错误");
             }
-          } else if (this.role === "admin") {
-            window.location.href = "http://192.168.0.198:8080/";
+          } catch {
+            this.$message.error("请重试！");
           }
         }
       });

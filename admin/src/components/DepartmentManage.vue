@@ -6,7 +6,6 @@
     </el-table-column>
     <el-table-column label="操作" width="200px">
       <template slot-scope="scope">
-        <el-button size="mini" @click.native="change(scope.$index,scope.row)">添加子部门 </el-button>
         <el-button size="mini" @click="handleDel(scope.$index, scope.row)">删除</el-button>
       </template>
     </el-table-column>

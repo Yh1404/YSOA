@@ -97,7 +97,8 @@ module.exports = app => {
     res.send("ok");
   });
   router.post("/api/admin/department", async (req, res) => {
-    await Dep.insertMany(req.body);
+    const dep = await Dep.create(req.body);
+    dep.save();
     res.send("ok");
   });
   app.use("/", router);

@@ -44,7 +44,9 @@ module.exports = app => {
     const user = await User.findOne({ username: req.body.username }).populate("identity").populate("department");
     if (user && !user.isLogin) {
       const isValid = require("bcryptjs").compareSync(req.body.password, user.password);
+      console.log(isValid);
       if (isValid) {
+        //签发Token
         const token = require("jsonwebtoken").sign(
           {
             id: String(user._id)
@@ -115,7 +117,7 @@ module.exports = app => {
           .lean());
       for (let i = 0; i < doc.length; i++) {
         for (let j = 0; j < doc[i].flow.to_users.length; j++) {
-          //若用户为公文的发起人过经办人，则将该公文反馈给用户
+          //若用户为公文的发起人或经办人，则将该公文反馈给用户
           if (doc[i].originator._id == req.params.id || doc[i].flow.to_users[j]._id == req.params.id) {
             result.push(doc[i]);
             break;
