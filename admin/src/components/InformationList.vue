@@ -44,12 +44,7 @@ export default {
   methods: {
     async fetchTableData() {
       const res = await this.$axios.get("/web/broadcast");
-      // res.data.forEach(item => {
-      //   item.abstract = item.body.substr(0, 12);
-      //   if (item.body.length > 12) {
-      //     item.abstract += "......";
-      //   }
-      // });
+
       this.tableData = res.data;
     },
     async handleDel(index, row) {

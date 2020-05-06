@@ -7,6 +7,7 @@ module.exports = app => {
   const Flow = require("../../models/Flow");
   const Broadcast = require("../../models/Broadcast");
   const Dep = require("../../models/Department");
+  const Doc = require("../../models/Document");
 
   const SECRET = "iodcowei345c$#%@$!j8esawfj23(&U&n"; //Token密钥
 
@@ -39,7 +40,7 @@ module.exports = app => {
   });
   router.get("/api/admin/user/:id?", async (req, res) => {
     if (req.params.id) {
-      const user = await User.findById(req.params.id);
+      const user = await User.findById(req.params.id).populate("identity").populate("department");
       res.send(user);
     } else {
       const users = await User.find().populate("identity").populate("department");
@@ -100,6 +101,23 @@ module.exports = app => {
     const dep = await Dep.create(req.body);
     dep.save();
     res.send("ok");
+  });
+  router.get("/api/admin/document/:id?", async (req, res) => {
+    if (req.params.id) {
+      const doc = await Doc.findById(req.params.id)
+        .populate({ path: "flow", model: "Flow" })
+        .populate({ path: "originator", model: "User" })
+        .populate({ path: "currentNodeID", model: "User" })
+        .lean();
+      res.send(doc);
+    } else {
+      const docs = await Doc.find()
+        .populate({ path: "originator", model: "User" })
+        .populate({ path: "currentNodeID", model: "User" })
+        .populate({ path: "flow", model: "Flow" })
+        .lean();
+      res.send(docs);
+    }
   });
   app.use("/", router);
 };

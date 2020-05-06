@@ -52,14 +52,8 @@
           </el-menu>
         </el-col>
         <el-main>
-          <keep-alive :exclude="['DocumentInfo', 'DocumentManage']">
-            <component
-              :is="flag"
-              :userInfo="user"
-              :Doc="param"
-              @fetchCount="Count"
-              @changeComponet="switchCom"
-            ></component>
+          <keep-alive :exclude="/./">
+            <component :is="flag" :userInfo="user" :Doc="param" @fetchCount="Count" @changeComponet="switchCom"></component>
           </keep-alive>
         </el-main>
       </el-container>

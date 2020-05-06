@@ -107,6 +107,8 @@ import PulishInformation from "@/components/PulishInformation";
 import InformationList from "@/components/InformationList";
 import DepartmentManage from "@/components/DepartmentManage";
 import addDepartment from "@/components/addDepartment";
+import DocumentManage from "@/components/DocumentManage";
+import DocumentInfo from "../components/DocumentInfo";
 export default {
   name: "Home",
   data() {
@@ -149,6 +151,9 @@ export default {
         case "1-4-2":
           this.flag = "DepartmentManage";
           break;
+        case "1-5":
+          this.flag = "DocumentManage";
+          break;
         default:
           break;
       }
@@ -182,7 +187,9 @@ export default {
     PulishInformation,
     InformationList,
     DepartmentManage,
-    addDepartment
+    addDepartment,
+    DocumentManage,
+    DocumentInfo
   }
 };
 </script>
