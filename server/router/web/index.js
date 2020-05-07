@@ -44,7 +44,6 @@ module.exports = app => {
     const user = await User.findOne({ username: req.body.username }).populate("identity").populate("department");
     if (user && !user.isLogin) {
       const isValid = require("bcryptjs").compareSync(req.body.password, user.password);
-      console.log(isValid);
       if (isValid) {
         //签发Token
         const token = require("jsonwebtoken").sign(
@@ -94,39 +93,36 @@ module.exports = app => {
   });
 
   router.get("/api/web/document/:id?", verifyToken, async (req, res) => {
-    //查询公文,
+    //查询公文
     //传入用户ID则查询该用户的公文
     //传入公文ID则查询该公文
     //不携带ID则查询最新的一条公文
-    let doc;
+
     let result = new Array();
     if (req.params.id) {
-      doc =
-        (await Document.findById(req.params.id)
-          .populate({ path: "originator", model: "User" })
-          .populate({ path: "currentNodeID", model: "User" })
-          .lean()) ||
-        (await Document.find({})
-          .populate({
-            path: "flow",
-            model: "Flow"
-          })
+      let doc = await Document.findById(req.params.id)
+        .populate({ path: "originator", model: "User" })
+        .populate({ path: "currentNodeID", model: "User" })
+        .sort({ _id: -1 })
+        .lean();
+      if (!doc) {
+        let docs = await Document.find({})
+          .populate({ path: "flow", model: "Flow" })
           .populate({ path: "originator", model: "User" })
           .populate({ path: "currentNodeID", model: "User" })
           .sort({ _id: -1 })
-          .lean());
-      for (let i = 0; i < doc.length; i++) {
-        for (let j = 0; j < doc[i].flow.to_users.length; j++) {
-          //若用户为公文的发起人或经办人，则将该公文反馈给用户
-          if (doc[i].originator._id == req.params.id || doc[i].flow.to_users[j]._id == req.params.id) {
-            result.push(doc[i]);
-            break;
+          .lean();
+        for (let i = 0; i < docs.length; i++) {
+          for (let j = 0; j < docs[i].flow.to_users.length; j++) {
+            //若用户为公文的发起人或经办人，则将该公文反馈给用户
+            if (docs[i].originator._id == req.params.id || docs[i].flow.to_users[j]._id == req.params.id) {
+              result.push(docs[i]);
+              break;
+            }
           }
         }
       }
-      if (result.length == 0) {
-        res.send(doc);
-      } else res.send(result);
+      res.send(doc || result);
     } else {
       doc = await Document.findOne()
         .sort({ _id: -1 })
@@ -168,6 +164,11 @@ module.exports = app => {
     await New.findByIdAndUpdate(req.params.id, { status: "READ" });
     res.send("消息已读");
   });
+  router.put("/api/web/user/:id", async (req, res) => {
+    await User.findByIdAndUpdate(req.params.id, req.body);
+    res.send("ok");
+  });
+
   app.use("/", router);
 
   function verifyToken(req, res, next) {

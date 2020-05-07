@@ -47,6 +47,10 @@
                     <span>我的消息</span>
                   </el-menu-item>
                 </el-badge>
+                <el-menu-item index="1-4">
+                  <i class="el-icon-user"></i>
+                  <span>个人中心</span>
+                </el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
@@ -67,6 +71,7 @@ import draft from "../components/Draft";
 import DocumentManage from "../components/DocumentManage";
 import DocumentInfo from "../components/DocumentInfo";
 import News from "../components/News";
+import PersonalCenter from "../components/PersonalCenter";
 
 export default {
   data() {
@@ -129,6 +134,9 @@ export default {
         case "1-3":
           this.flag = "News";
           break;
+        case "1-4":
+          this.flag = "PersonalCenter";
+          break;
         default:
           break;
       }
@@ -139,7 +147,8 @@ export default {
     draft: draft,
     DocumentManage: DocumentManage,
     DocumentInfo: DocumentInfo,
-    News: News
+    News: News,
+    PersonalCenter: PersonalCenter
   }
 };
 </script>

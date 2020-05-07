@@ -14,7 +14,7 @@ export default new Vuex.Store({
   getters: {
     //get login state
     id: state => state.id,
-    username: state => state.username,
+    name: state => state.name,
     token: state => state.token,
     department: state => state.department,
     identity: state => state.identity

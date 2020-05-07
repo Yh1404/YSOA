@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div></div>
+    <div class="empty" v-if="news.length == 0">暂时没有消息。。。</div>
     <el-badge :is-dot="item.status === 'UNREAD' ? true : false" v-for="item in news" :key="item._id">
       <el-card shadow="hover" @dblclick.native="readNew(item._id)">
         <p>{{ item.type }}</p>
@@ -61,5 +61,17 @@ export default {
   margin-bottom: 10px;
   border-radius: 20px;
   text-align: left;
+}
+.empty {
+  margin: 0 auto;
+  width: 95%;
+  height: 100px;
+  background-color: #fff;
+  border-radius: 10px;
+  color: #ccc;
+  font-weight: 500;
+  font-size: 24px;
+  text-align: center;
+  line-height: 100px;
 }
 </style>
