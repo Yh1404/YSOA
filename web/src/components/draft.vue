@@ -3,7 +3,7 @@
     <el-form label-position="left">
       <el-form-item label="流程模型">
         <el-select v-model="document.flow" placeholder="选择流程模型">
-          <el-option v-for="flow in flows" :key="flow._id" :label="flow.name" :value="flow"></el-option>
+          <el-option v-for="flow in flows" :key="flow._id" :label="flow.name" :value="flow._id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="主题" label-width="70px">
@@ -70,12 +70,18 @@ export default {
       this.cc.forEach(item => {
         ccitem.push(item[1]);
       });
+      let currentNodeID;
+      this.flows.forEach(item => {
+        if (item._id === this.document.flow) {
+          currentNodeID = item.to_users[0];
+        }
+      });
       let doc = {
         title: this.document.title,
         body: this.document.body,
         date: this.moment().format("YYYY/MM/DD"),
-        flow: this.document.flow._id,
-        currentNodeID: this.document.flow.to_users[0],
+        flow: this.document.flow,
+        currentNodeID: currentNodeID,
         originator: this.user.id,
         cc: ccitem,
         status: "PENDING"
@@ -86,7 +92,6 @@ export default {
         message: "提交成功"
       });
       let param = await this.$axios.get("/web/document", { headers: { accessToken: sessionStorage.getItem("token") } });
-
       let payload = {
         component: "DocumentInfo",
         param: param.data

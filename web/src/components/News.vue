@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="empty" v-if="news.length == 0">暂时没有消息。。。</div>
+    <el-button id="refresh_btn" type="primary" @click="fetchNews" :loading="loading">刷新消息</el-button>
     <el-badge :is-dot="item.status === 'UNREAD' ? true : false" v-for="item in news" :key="item._id">
       <el-card shadow="hover" @dblclick.native="readNew(item._id)">
         <p>{{ item.type }}</p>
@@ -14,7 +15,8 @@
 export default {
   data() {
     return {
-      news: []
+      news: [],
+      loading: false
     };
   },
   computed: {
@@ -36,7 +38,9 @@ export default {
   },
   methods: {
     async fetchNews() {
+      this.loading = true;
       const res = await this.$axios.get(`/web/news/${this.$store.getters.id}`);
+      this.loading = false;
       this.news = res.data;
     },
     async readNew(id) {
@@ -73,5 +77,9 @@ export default {
   font-size: 24px;
   text-align: center;
   line-height: 100px;
+}
+#refresh_btn {
+  margin-left: 1000px;
+  margin-top: 5px;
 }
 </style>

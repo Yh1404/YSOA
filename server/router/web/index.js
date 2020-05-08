@@ -72,7 +72,7 @@ module.exports = app => {
   });
 
   router.get("/api/web/broadcast", async (_req, res) => {
-    const bc = await Broadcast.find();
+    const bc = await Broadcast.find().sort({ _id: -1 });
     res.send(bc);
   });
 
@@ -112,6 +112,7 @@ module.exports = app => {
           .populate({ path: "currentNodeID", model: "User" })
           .sort({ _id: -1 })
           .lean();
+        console.log(docs);
         for (let i = 0; i < docs.length; i++) {
           for (let j = 0; j < docs[i].flow.to_users.length; j++) {
             //若用户为公文的发起人或经办人，则将该公文反馈给用户

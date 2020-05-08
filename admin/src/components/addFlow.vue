@@ -14,7 +14,8 @@
         <el-input type="textarea" style="width:250px" v-model="flow.description"></el-input>
       </el-form-item>
       <el-form-item label-width="100px">
-        <el-button type="primary" @click="submit">提交</el-button>
+        <el-button type="primary" @click="submit">{{fatherID?"修改":"添加"}}</el-button>
+        <el-button @click="cancel" v-if="fatherID">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -25,7 +26,8 @@ export default {
   data() {
     return {
       flow: {},
-      users: []
+      users: [],
+      fatherID: this.id
     };
   },
   props: {
@@ -33,11 +35,15 @@ export default {
   },
   created() {
     this.fetchUser();
-    this.id && this.fetch();
+    this.fatherID && this.fetch();
   },
   methods: {
+    cancel() {
+      this.fatherID = undefined;
+      this.flow = {};
+    },
     async submit() {
-      if (this.id) {
+      if (this.fatherID) {
         //存在流程id时，执行流程修改操作
         await this.$axios.put(`/admin/flow/${this.id}`, this.flow);
         this.$message("修改成功");

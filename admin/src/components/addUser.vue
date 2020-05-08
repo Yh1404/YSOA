@@ -36,7 +36,8 @@
       <el-input style="width:200px" placeholder="电话" prefix-icon="el-icon-phone-outline" v-model.number="regisForm.telephone"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="regis()">注册</el-button>
+      <el-button type="primary" @click="regis()" style="width:100px">{{fatherID?'确认修改':'确认添加'}}</el-button>
+      <el-button v-show="fatherID" style="width:100px" @click="cancel">取消</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -47,6 +48,7 @@ export default {
   },
   data() {
     return {
+      fatherID: this.id,
       identity: [], //身份选择器取值
       department: [], //部门级联选择器取值
       gender: ["男", "女"],
@@ -55,10 +57,6 @@ export default {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
-          { min: 6, max: 16, message: "长度在 6 到 16 个字符", trigger: "blur" }
-        ],
-        password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
           { min: 6, max: 16, message: "长度在 6 到 16 个字符", trigger: "blur" }
         ],
         telephone: [
@@ -72,8 +70,12 @@ export default {
     };
   },
   methods: {
+    cancel() {
+      this.fatherID = undefined;
+      this.regisForm = {};
+    },
     async regis() {
-      if (this.id) {
+      if (this.fatherID) {
         await this.$axios.put(`/admin/user/${this.id}`, this.regisForm);
         this.$message({
           type: "success",

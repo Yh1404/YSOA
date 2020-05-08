@@ -1,5 +1,6 @@
 <template>
   <div>
+    <el-button id="refresh_btn" type="primary" @click="refresh" :loading="loading">刷新数据</el-button>
     <el-table :data="currentData" max-height="400px">
       <el-table-column label="日期" prop="date"> </el-table-column>
       <el-table-column label="标题" prop="title"> </el-table-column>
@@ -33,7 +34,8 @@ export default {
       dialogData: {},
       dialogVisible: false,
       tableData: [],
-      currentData: []
+      currentData: [],
+      loading: false
     };
   },
   async created() {
@@ -46,11 +48,17 @@ export default {
     }
   },
   methods: {
+    async refresh() {
+      await this.fetchTableData();
+      this.handleCurrentPage(1);
+    },
     async fetchTableData() {
+      this.loading = true;
       const res = await this.$axios.get("/web/broadcast", {
         headers: { accessToken: sessionStorage.getItem("token") }
       });
       this.tableData = res.data;
+      this.loading = false;
     },
     handleCurrentPage(index) {
       this.currentData = this.tableData.slice((index - 1) * 5, index * 5);
@@ -87,5 +95,9 @@ export default {
   position: absolute;
   left: 45%;
   bottom: 80px;
+}
+#refresh_btn {
+  position: static;
+  margin-left: 1000px;
 }
 </style>
